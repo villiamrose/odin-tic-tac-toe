@@ -1,5 +1,5 @@
 const Player = function(name) {
-  let _name = name;
+  const _name = name;
   let _score = 0;
   
   function getName() {
@@ -15,12 +15,69 @@ const Player = function(name) {
   }
 }
 
+const Cell = function(row, column) {
+  // private properties
+  const _row = row;
+  const _column = column;
+  let _player = null;
+  
+  // public functions
+  function toString() {
+    return `${_row}-${_column}`;
+  }
+  function setPlayer(player) {
+    if (!_player) _player = player;
+  }
+  function getPlayer() {
+    return _player;
+  }
+
+  return {
+    toString,
+    setPlayer,
+    getPlayer
+  }
+}
+
 const Screen = (function() {
 
 })();
 
 const Board = (function() {
+  // private properties
+  const _board = [];
 
+  //private functions
+  function _buildBoard() {
+    for(let i = 1; i < 4; i++) {
+      let row = [];
+      for(let j = 1; j < 4; j++) {
+        const cell = Cell(i, j);
+        row.push(cell);
+      }
+      _board.push(row);
+    }
+  }
+  
+  // public functions
+  function toString() {
+    let boardStr = '';
+    _board.forEach(row => {
+      let rowStr = '';
+      row.forEach(cell => {
+        rowStr += `${cell.toString()} `;
+      });
+      boardStr += `${rowStr}\n`;
+    });
+    return boardStr;
+  }
+
+  // initialization
+  _buildBoard();
+
+  return{
+    toString
+  }
 })();
 
 const Game = (function() {
@@ -33,3 +90,4 @@ const Game = (function() {
 })();
 
 Game.start();
+console.log(Board.toString());
