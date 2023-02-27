@@ -1,5 +1,6 @@
 const Player = function(name) {
   const _name = name;
+  const cells = [];
   let _score = 0;
   
   function getName() {
@@ -8,10 +9,18 @@ const Player = function(name) {
   function getScore() {
     return _score;
   }
+  function addCell(cell) {
+    cells.push(cell);
+  }
+  function getCells() {
+    return cells;
+  }
   
   return {
     getName,
-    getScore
+    getScore,
+    addCell,
+    getCells
   }
 }
 
