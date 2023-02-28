@@ -34,6 +34,12 @@ const Cell = function(row, column) {
   function toString() {
     return `${_row}-${_column}`;
   }
+  function getRow() {
+    return _row;
+  }
+  function getColumn() {
+    return _column;
+  }
   function setPlayer(player) {
     if (!_player) _player = player;
   }
@@ -43,6 +49,8 @@ const Cell = function(row, column) {
 
   return {
     toString,
+    getRow,
+    getColumn,
     setPlayer,
     getPlayer
   }
@@ -94,9 +102,26 @@ const Game = (function() {
     const playerOne = Player("villiam");
     console.log(playerOne.getName());
   }
+  function isWinner(player) {
+    const cells = player.getCells();
+    for(let i = 1; i < 4; i++) {
+      let rowMatch = 0;
+      let colMatch = 0;
+      cells.forEach(cell => {
+        const row = cell.getRow();
+        const col = cell.getColumn();
+        if (row === i) rowMatch++;
+        if (col === i) colMatch++;
+      });
+      if (rowMatch === 3 || colMatch === 3) return true;
+    }
+    return false; 
+  }
 
-  return {start}
+  return {
+    start,
+    isWinner
+  }
 })();
 
 Game.start();
-console.log(Board.toString());
