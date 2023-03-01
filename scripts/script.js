@@ -98,12 +98,24 @@ const Board = (function() {
 })();
 
 const Game = (function() {
+  // private functions
+  function _filterCells(values, cells) {
+    return cells.filter(cell =>
+      values.find(value => 
+        cell.toString() === value
+      )
+    );
+  }
+
+  // public functions
   function start() {
     const playerOne = Player("villiam");
     console.log(playerOne.getName());
   }
   function isWinner(player) {
     const cells = player.getCells();
+    
+    // check horizontal/vertical streaks
     for(let i = 1; i < 4; i++) {
       let rowMatch = 0;
       let colMatch = 0;
@@ -115,6 +127,14 @@ const Game = (function() {
       });
       if (rowMatch === 3 || colMatch === 3) return true;
     }
+
+    //check diagonal streaks
+    const bwdValues = ["1-1", "2-2", "3-3"];
+    const bwdMatches = _filterCells(bwdValues, cells);
+    const fwdValues = ["3-1", "2-2", "1-3"];
+    const fwdMatches = _filterCells(fwdValues, cells);
+    if (bwdMatches.length === 3 || fwdMatches.length === 3) return true;
+
     return false; 
   }
 
