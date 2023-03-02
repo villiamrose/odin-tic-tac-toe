@@ -1,0 +1,43 @@
+:root {
+  --header: gray;
+  --main: lightgreen;
+  --sidebar: lightblue;
+  --footer: gray;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  grid-template-rows: 75px 1fr 75px;
+  grid-template-areas: 
+    "header header"
+    "main sidebar"
+    "footer footer";
+}
+
+.header {
+  background-color: var(--header);
+  grid-area: header;
+}
+
+.main {
+  background-color: var(--main);
+  grid-area: main
+}
+
+.sidebar {
+  background-color: var(--sidebar);
+  grid-area: sidebar;
+}
+
+.footer {
+  background-color: var(--footer);
+  grid-area: footer;
+}
