@@ -3,6 +3,7 @@
   --main: lightgreen;
   --sidebar: lightblue;
   --footer: gray;
+  --board: lightgray;
 }
 
 * {
@@ -30,7 +31,16 @@ body {
 
 .main {
   background-color: var(--main);
-  grid-area: main
+  grid-area: main;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  background-color: var(--board);
+  height: 400px;
+  width: 400px;
 }
 
 .sidebar {
