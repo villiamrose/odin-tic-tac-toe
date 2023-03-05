@@ -28,6 +28,16 @@ body {
 .header {
   background-color: var(--header);
   grid-area: header;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+
+}
+
+.title {
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .main {
