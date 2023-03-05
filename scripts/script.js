@@ -56,16 +56,13 @@ const Cell = function(row, column) {
   }
 }
 
-const Screen = (function() {
-
-})();
-
 const Board = (function() {
   // private properties
-  const _board = [];
+  let _board = [];
 
   //private functions
-  function _buildBoard() {
+  function _initialize() {
+    _board = [];
     for(let i = 1; i < 4; i++) {
       let row = [];
       for(let j = 1; j < 4; j++) {
@@ -88,12 +85,39 @@ const Board = (function() {
     });
     return boardStr;
   }
+  function getBoard() {
+    return _board;
+  }
 
   // initialization
-  _buildBoard();
+  _initialize();
 
   return{
-    toString
+    toString,
+    getBoard
+  }
+})();
+
+const Screen = (function() {
+  // public functions
+  function _buildCell(cell) {
+    const cellElement = document.createElement("div");
+    cellElement.className = "cell";
+    cellElement.addEventListener("click", () => cell);
+    return cellElement;
+  }
+  function buildBoard(board) {
+    const boardElement = document.querySelector('.board');
+    boardElement.childNodes.forEach(cell => cell.remove());
+    board.forEach(row => {
+      row.forEach(cell => {
+        boardElement.append(_buildCell(cell));
+      })
+    })
+  }
+
+  return {
+    buildBoard
   }
 })();
 
@@ -109,6 +133,7 @@ const Game = (function() {
 
   // public functions
   function start() {
+    Screen.buildBoard(Board.getBoard());
     const playerOne = Player("villiam");
     console.log(playerOne.getName());
   }
