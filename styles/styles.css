@@ -1,9 +1,10 @@
 :root {
-  --header: gray;
-  --main: lightgreen;
-  --sidebar: lightblue;
-  --footer: gray;
-  --board: black;
+  --header: rgb(54, 139, 54);
+  --main: rgb(144, 238, 144);
+  --sidebar: rgb(54, 158, 54);
+  --footer: rgb(54, 139, 54);
+  --board: rgb(54, 139, 54);
+  --cell: rgb(255, 255, 255);
 }
 
 * {
@@ -19,7 +20,7 @@ body {
   grid-template-columns: 1fr 300px;
   grid-template-rows: 75px 1fr 75px;
   grid-template-areas: 
-    "header header"
+    "header sidebar"
     "main sidebar"
     "footer footer";
 }
@@ -50,7 +51,7 @@ body {
 .cell {
   flex: 1;
   flex-basis: 30%;
-  background-color: red;
+  background-color: white;
 }
 
 .sidebar {
