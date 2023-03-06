@@ -85,8 +85,21 @@ const Board = (function() {
     });
     return boardStr;
   }
-  function getBoard() {
-    return _board;
+
+  function getCells() {
+    const cells = [];
+    _board.forEach(row => 
+      row.forEach(cell => 
+        cells.push(cell)
+      )
+    );
+    return cells;
+  }
+
+  function getCellById(id) {
+    const cells = getCells();
+    const matchedCells = cells.filter(cell => cell.toString() === id);
+    return matchedCells[0];
   }
 
   // initialization
@@ -94,30 +107,50 @@ const Board = (function() {
 
   return{
     toString,
-    getBoard
+    getCells,
+    getCellById
   }
 })();
 
 const Screen = (function() {
-  // public functions
-  function _buildCell(cell) {
+  //private variables 
+  const CROSS_MARK_IMG = "./res/cross.svg";
+
+  // private functions
+  function _buildCell(game, cell) {
     const cellElement = document.createElement("div");
     cellElement.className = "cell";
-    cellElement.addEventListener("click", () => cell);
+    cellElement.id = cell.toString();
+    cellElement.addEventListener("click", game);
     return cellElement;
   }
-  function buildBoard(board) {
+
+  function _buildMark(game) {
+    const markElement = document.createElement("img");
+    markElement.className = "mark";
+    markElement.src = CROSS_MARK_IMG;
+    return markElement;
+  }
+
+  // public functions
+  function buildBoard(game, board) {
     const boardElement = document.querySelector('.board');
     boardElement.childNodes.forEach(cell => cell.remove());
-    board.forEach(row => {
-      row.forEach(cell => {
-        boardElement.append(_buildCell(cell));
-      })
+    board.getCells().forEach(cell => {
+      boardElement.append(_buildCell(game, cell));
     })
   }
 
+  function markCell(cellElement, game) {
+    console.log("hello");
+    const markElement = _buildMark(game);
+    cellElement.append(markElement);
+    cellElement.removeEventListener("click", game);
+  }
+
   return {
-    buildBoard
+    buildBoard,
+    markCell
   }
 })();
 
@@ -131,11 +164,15 @@ const Game = (function() {
     );
   }
 
+  function _clickHandler(game, context) {
+    const cellElement = context.target;
+    Screen.markCell(cellElement, game);
+    // const cell = Board.getCellById(cellElement.id);
+  }
+
   // public functions
   function start() {
-    Screen.buildBoard(Board.getBoard());
-    const playerOne = Player("villiam");
-    console.log(playerOne.getName());
+    Screen.buildBoard(this, Board);
   }
   function isWinner(player) {
     const cells = player.getCells();
@@ -163,9 +200,20 @@ const Game = (function() {
     return false; 
   }
 
+  function handleEvent(context) {
+    switch (context.type) {
+      case "click":
+        _clickHandler(this, context);
+        break;
+      default:
+        break;
+    }
+  }
+
   return {
     start,
-    isWinner
+    isWinner,
+    handleEvent
   }
 })();
 
