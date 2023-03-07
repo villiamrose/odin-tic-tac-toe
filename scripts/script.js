@@ -1,8 +1,11 @@
-const Player = function(name) {
+const Player = function(name, mark) {
+  // private variables
   const _name = name;
-  const cells = [];
+  const _mark = mark;
+  const _cells = [];
   let _score = 0;
   
+  // public functions
   function getName() {
     return _name;
   }
@@ -10,14 +13,18 @@ const Player = function(name) {
     return _score;
   }
   function addCell(cell) {
-    cells.push(cell);
+    _cells.push(cell);
   }
   function getCells() {
-    return cells;
+    return _cells;
+  }
+  function getMark() {
+    return _mark;
   }
   
   return {
     getName,
+    getMark,
     getScore,
     addCell,
     getCells
@@ -113,9 +120,6 @@ const Board = (function() {
 })();
 
 const Screen = (function() {
-  //private variables 
-  const CROSS_MARK_IMG = "./res/cross.svg";
-
   // private functions
   function _buildCell(game, cell) {
     const cellElement = document.createElement("div");
@@ -126,9 +130,10 @@ const Screen = (function() {
   }
 
   function _buildMark(game) {
+    const currentPlayer = game.getCurrentPlayer();
     const markElement = document.createElement("img");
     markElement.className = "mark";
-    markElement.src = CROSS_MARK_IMG;
+    markElement.src = `./res/${currentPlayer.getMark()}.svg`;
     return markElement;
   }
 
@@ -142,7 +147,6 @@ const Screen = (function() {
   }
 
   function markCell(cellElement, game) {
-    console.log("hello");
     const markElement = _buildMark(game);
     cellElement.append(markElement);
     cellElement.removeEventListener("click", game);
@@ -155,6 +159,11 @@ const Screen = (function() {
 })();
 
 const Game = (function() {
+  //private variables
+  let _playerOne = null;
+  let _playerTwo = null;
+  let _currentPlayer = null;
+
   // private functions
   function _filterCells(values, cells) {
     return cells.filter(cell =>
@@ -164,16 +173,36 @@ const Game = (function() {
     );
   }
 
+  function _setCurrentPlayer() {
+    if(_currentPlayer === _playerOne) {
+      _currentPlayer = _playerTwo;
+    } else {
+      _currentPlayer = _playerOne;
+    }
+  }
+
   function _clickHandler(game, context) {
     const cellElement = context.target;
+    const cell = Board.getCellById(cellElement.id);
+
     Screen.markCell(cellElement, game);
-    // const cell = Board.getCellById(cellElement.id);
+
+    _currentPlayer.addCell(cell);
+    
+    console.log(isWinner(_currentPlayer));
+
+    _setCurrentPlayer();
   }
 
   // public functions
   function start() {
+    _playerOne = Player("John", "cross");
+    _playerTwo = Player("Randy", "circle");
+    _currentPlayer = _playerOne;
+    
     Screen.buildBoard(this, Board);
   }
+
   function isWinner(player) {
     const cells = player.getCells();
     
@@ -200,6 +229,10 @@ const Game = (function() {
     return false; 
   }
 
+  function getCurrentPlayer() {
+    return _currentPlayer;
+  };
+
   function handleEvent(context) {
     switch (context.type) {
       case "click":
@@ -213,6 +246,7 @@ const Game = (function() {
   return {
     start,
     isWinner,
+    getCurrentPlayer,
     handleEvent
   }
 })();
