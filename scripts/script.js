@@ -97,8 +97,11 @@ const Board = (function() {
     return matchedCells[0];
   }
 
-  function removeCell(id) {
-    const cells = []
+  function removeCellById(id) {
+    const filteredCells = _board.filter(cell => 
+      cell.toString() !== id
+    );
+    _board = filteredCells;
   }
 
   // initialization
@@ -107,7 +110,8 @@ const Board = (function() {
   return{
     toString,
     getCells,
-    getCellById
+    getCellById,
+    removeCellById
   }
 })();
 
@@ -178,6 +182,7 @@ const Game = (function() {
     const cell = Board.getCellById(cellElement.id);
 
     Screen.markCell(cellElement, game);
+    Board.removeCellById(cellElement);
 
     _currentPlayer.addCell(cell);
     
