@@ -69,44 +69,36 @@ const Board = (function() {
 
   //private functions
   function _initialize() {
-    _board = [];
     for(let i = 1; i < 4; i++) {
-      let row = [];
       for(let j = 1; j < 4; j++) {
         const cell = Cell(i, j);
-        row.push(cell);
+        _board.push(cell);
       }
-      _board.push(row);
     }
   }
   
   // public functions
   function toString() {
     let boardStr = '';
-    _board.forEach(row => {
-      let rowStr = '';
-      row.forEach(cell => {
-        rowStr += `${cell.toString()} `;
-      });
-      boardStr += `${rowStr}\n`;
+    _board.forEach(cell => {
+      boardStr += `${cell.toString()} `;
     });
     return boardStr;
   }
 
   function getCells() {
-    const cells = [];
-    _board.forEach(row => 
-      row.forEach(cell => 
-        cells.push(cell)
-      )
-    );
-    return cells;
+    return _board;
   }
 
   function getCellById(id) {
-    const cells = getCells();
-    const matchedCells = cells.filter(cell => cell.toString() === id);
+    const matchedCells = _board.filter(cell => 
+      cell.toString() === id
+    );
     return matchedCells[0];
+  }
+
+  function removeCell(id) {
+    const cells = []
   }
 
   // initialization
