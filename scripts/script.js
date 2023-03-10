@@ -91,17 +91,19 @@ const Board = (function() {
   }
 
   function getCellById(id) {
-    const matchedCells = _board.filter(cell => 
+    const matchedCell = _board.filter(cell => 
       cell.toString() === id
     );
-    return matchedCells[0];
+    return matchedCell[0];
   }
 
   function removeCellById(id) {
+    console.log(`removed: ${id}`);
     const filteredCells = _board.filter(cell => 
       cell.toString() !== id
     );
     _board = filteredCells;
+    console.log(`board: ${_board}`);
   }
 
   // initialization
@@ -133,6 +135,14 @@ const Screen = (function() {
     return markElement;
   }
 
+  function _getCellById(id) {
+    const cells = Array.from(document.querySelectorAll(".cell"));
+    const cellElement = cells.filter(cell => 
+      cell.id === id
+    );
+    return cellElement[0];
+  }
+
   // public functions
   function buildBoard(game, board) {
     const boardElement = document.querySelector('.board');
@@ -142,7 +152,8 @@ const Screen = (function() {
     })
   }
 
-  function markCell(cellElement, game) {
+  function markCell(id, game) {
+    const cellElement = _getCellById(id);
     const markElement = _buildMark(game);
     cellElement.append(markElement);
     cellElement.removeEventListener("click", game);
@@ -169,26 +180,49 @@ const Game = (function() {
     );
   }
 
-  function _setCurrentPlayer() {
+  function _chooseRandNum(max) {
+    return Math.floor(Math.random() * (max + 1));
+  }
+
+  function _chooseCell() {
+    const cells = Board.getCells();
+    const index = _chooseRandNum(cells.length - 1);
+    const cell = cells[index];
+    console.log(`chose: ${cell.toString()}`);
+    return cell;
+  }
+
+  function _handleAiTurn(game) {
+    const cell = _chooseCell();
+    _markCell(cell.toString(), game);
+    _setNextPlayer(game);
+  }
+
+  function _setNextPlayer(game) {
     if(_currentPlayer === _playerOne) {
       _currentPlayer = _playerTwo;
+      _handleAiTurn(game);
     } else {
       _currentPlayer = _playerOne;
     }
+  }
+
+  function _markCell(id, game) {
+    Screen.markCell(id, game);
+    Board.removeCellById(id);
   }
 
   function _clickHandler(game, context) {
     const cellElement = context.target;
     const cell = Board.getCellById(cellElement.id);
 
-    Screen.markCell(cellElement, game);
-    Board.removeCellById(cellElement);
+    _markCell(cellElement.id, game);
 
     _currentPlayer.addCell(cell);
     
     console.log(isWinner(_currentPlayer));
 
-    _setCurrentPlayer();
+    _setNextPlayer(game);
   }
 
   // public functions
