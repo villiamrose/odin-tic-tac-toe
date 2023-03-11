@@ -194,8 +194,10 @@ const Game = (function() {
 
   function _handleAiTurn(game) {
     const cell = _chooseCell();
-    _markCell(cell.toString(), game);
-    _setNextPlayer(game);
+    setTimeout(() => {
+      _markCell(cell.toString(), game);
+      _setNextPlayer(game);
+    }, 600);
   }
 
   function _setNextPlayer(game) {
