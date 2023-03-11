@@ -159,9 +159,25 @@ const Screen = (function() {
     cellElement.removeEventListener("click", game);
   }
 
+  function maskBoard() {
+    const mainElement = document.querySelector(".main");
+    const mask = document.createElement("div");
+    mask.className = "board mask";
+    mask.style.backgroundColor = "rgba(0, 0, 0, 0)";
+    mask.style.position = "absolute";
+    mainElement.appendChild(mask);
+  }
+
+  function unmaskBoard() {
+    const mask = document.querySelector(".mask");
+    mask.remove();
+  }
+
   return {
     buildBoard,
-    markCell
+    markCell,
+    maskBoard,
+    unmaskBoard
   }
 })();
 
@@ -193,10 +209,12 @@ const Game = (function() {
   }
 
   function _handleAiTurn(game) {
+    Screen.maskBoard();
     const cell = _chooseCell();
     setTimeout(() => {
       _markCell(cell.toString(), game);
       _setNextPlayer(game);
+      Screen.unmaskBoard();
     }, 600);
   }
 
