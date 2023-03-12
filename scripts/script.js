@@ -203,7 +203,7 @@ const Game = (function() {
   }
 
   function _chooseRandNum(max) {
-    return Math.floor(Math.random() * (max + 1));
+    return Math.floor(Math.random() * (max + 1));;
   }
 
   function _chooseCell() {
@@ -221,7 +221,7 @@ const Game = (function() {
       _markCell(cell.toString(), game);
       _setNextPlayer(game);
       Screen.unmaskBoard();
-    }, 600);
+    }, _chooseRandNum(3000));
   }
 
   function _setNextPlayer(game) {
