@@ -5,6 +5,7 @@
   --footer: rgb(54, 139, 54);
   --board: rgb(54, 139, 54);
   --cell: rgb(255, 255, 255);
+  --text: rgb(255, 255, 255);
 }
 
 * {
@@ -15,6 +16,7 @@
 }
 
 body {
+  color: var(--text);
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -31,11 +33,9 @@ body {
   display: flex;
   align-items: center;
   padding: 10px 20px;
-
 }
 
 .title {
-  color: white;
   font-size: 2rem;
   font-weight: bold;
 }
@@ -61,9 +61,19 @@ body {
 .cell {
   flex: 1;
   flex-basis: 30%;
-  background-color: white;
+  background-color: var(--cell);
   aspect-ratio: 1 / 1;
   display: flex;
+}
+
+.turn {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.scores {
+  display: flex;
+  justify-content:space-evenly;
 }
 
 .sidebar {
@@ -72,12 +82,23 @@ body {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  padding: 20px 10px;
+  padding: 20px 20px;
+  gap: 20px;
 }
 
 .sidebar .title {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.info {
+  width: 100%;
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
 }
 
 .footer {

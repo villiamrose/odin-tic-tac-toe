@@ -173,11 +173,17 @@ const Screen = (function() {
     mask.remove();
   }
 
+  function setNextPlayer(player) {
+    const playerTurnElement = document.querySelector(".turn .player");
+    playerTurnElement.textContent = player.getName();
+  }
+
   return {
     buildBoard,
     markCell,
     maskBoard,
-    unmaskBoard
+    unmaskBoard,
+    setNextPlayer
   }
 })();
 
@@ -225,6 +231,7 @@ const Game = (function() {
     } else {
       _currentPlayer = _playerOne;
     }
+    Screen.setNextPlayer(_currentPlayer);
   }
 
   function _markCell(id, game) {
