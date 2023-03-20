@@ -178,12 +178,23 @@ const Screen = (function() {
     currentPlayerElement.textContent = player.getName();
   }
 
+  function buildMainMenu(game) {
+    const players = game.getPlayers();
+    const currentPlayer = game.getCurrentPlayer();
+    const p1NameElement = document.querySelector(".p1 .name");
+    const p2NameElement = document.querySelector(".p2 .name");
+    p1NameElement.textContent = players[0].getName();
+    p2NameElement.textContent = players[1].getName();
+    setCurrentPlayer(currentPlayer);
+  }
+
   return {
     buildBoard,
     markCell,
     maskBoard,
     unmaskBoard,
-    setCurrentPlayer
+    setCurrentPlayer,
+    buildMainMenu
   }
 })();
 
@@ -259,6 +270,7 @@ const Game = (function() {
     _currentPlayer = _playerOne;
     
     Screen.buildBoard(this, Board);
+    Screen.buildMainMenu(this);
   }
 
   function isWinner(player) {
@@ -301,11 +313,16 @@ const Game = (function() {
     }
   }
 
+  function getPlayers() {
+    return [_playerOne, _playerTwo];
+  }
+
   return {
     start,
     isWinner,
     getCurrentPlayer,
-    handleEvent
+    handleEvent,
+    getPlayers
   }
 })();
 
