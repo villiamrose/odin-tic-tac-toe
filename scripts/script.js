@@ -2,7 +2,7 @@ const Player = function(name, mark) {
   // private variables
   const _name = name;
   const _mark = mark;
-  const _cells = [];
+  let _cells = [];
   let _score = 0;
   
   // public functions
@@ -21,13 +21,22 @@ const Player = function(name, mark) {
   function getMark() {
     return _mark;
   }
+  function addScore() {
+    _score++;
+    return _score;
+  }
+  function resetCells() {
+    _cells = [];
+  }
   
   return {
     getName,
     getMark,
     getScore,
     addCell,
-    getCells
+    getCells,
+    addScore,
+    resetCells
   }
 }
 
@@ -98,12 +107,15 @@ const Board = (function() {
   }
 
   function removeCellById(id) {
-    console.log(`removed: ${id}`);
     const filteredCells = _board.filter(cell => 
       cell.toString() !== id
     );
     _board = filteredCells;
-    console.log(`board: ${_board}`);
+  }
+
+  function reset() {
+    _board = [];
+    _initialize();
   }
 
   // initialization
@@ -113,7 +125,8 @@ const Board = (function() {
     toString,
     getCells,
     getCellById,
-    removeCellById
+    removeCellById,
+    reset
   }
 })();
 
@@ -146,7 +159,11 @@ const Screen = (function() {
   // public functions
   function buildBoard(game, board) {
     const boardElement = document.querySelector('.board');
-    boardElement.childNodes.forEach(cell => cell.remove());
+
+    while (boardElement.firstChild) {
+      boardElement.removeChild(boardElement.firstChild);
+    }
+    
     board.getCells().forEach(cell => {
       boardElement.append(_buildCell(game, cell));
     })
@@ -188,13 +205,21 @@ const Screen = (function() {
     setCurrentPlayer(currentPlayer);
   }
 
+  function addScore(playerNum) {
+    console.log(playerNum);
+    const scoreElement = document.querySelector(`.p${playerNum} .score`);
+    console.log(scoreElement);
+    scoreElement.textContent = scoreElement.textContent + "I";
+  }
+
   return {
     buildBoard,
     markCell,
     maskBoard,
     unmaskBoard,
     setCurrentPlayer,
-    buildMainMenu
+    buildMainMenu,
+    addScore
   }
 })();
 
@@ -221,7 +246,6 @@ const Game = (function() {
     const cells = Board.getCells();
     const index = _chooseRandNum(cells.length - 1);
     const cell = cells[index];
-    console.log(`chose: ${cell.toString()}`);
     return cell;
   }
 
@@ -229,8 +253,9 @@ const Game = (function() {
     Screen.maskBoard();
     const cell = _chooseCell();
     setTimeout(() => {
+      _currentPlayer.addCell(cell);
       _markCell(cell.toString(), game);
-      _setNextPlayer(game);
+      _checkWinner(game);
       Screen.unmaskBoard();
     }, _chooseRandNum(3000));
   }
@@ -254,12 +279,22 @@ const Game = (function() {
     const cellElement = context.target;
     const cell = Board.getCellById(cellElement.id);
 
-    _markCell(cellElement.id, game);
-
     _currentPlayer.addCell(cell);
-    
-    console.log(isWinner(_currentPlayer));
+    _markCell(cellElement.id, game);
+    _checkWinner(game);
+  }
 
+  function _checkWinner(game) {
+    if(isWinner(_currentPlayer)) {
+      const playerNum = _currentPlayer === _playerOne ? 1 : 2;
+      Board.reset();
+      Screen.buildBoard(game, Board);
+      Screen.addScore(playerNum);
+
+      _currentPlayer.addScore();
+      _playerOne.resetCells();
+      _playerTwo.resetCells();
+    }
     _setNextPlayer(game);
   }
 
