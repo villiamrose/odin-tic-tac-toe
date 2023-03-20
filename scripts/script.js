@@ -173,9 +173,9 @@ const Screen = (function() {
     mask.remove();
   }
 
-  function setNextPlayer(player) {
-    const playerTurnElement = document.querySelector(".turn .player");
-    playerTurnElement.textContent = player.getName();
+  function setCurrentPlayer(player) {
+    const currentPlayerElement = document.querySelector(".turn .current");
+    currentPlayerElement.textContent = player.getName();
   }
 
   return {
@@ -183,7 +183,7 @@ const Screen = (function() {
     markCell,
     maskBoard,
     unmaskBoard,
-    setNextPlayer
+    setCurrentPlayer
   }
 })();
 
@@ -231,7 +231,7 @@ const Game = (function() {
     } else {
       _currentPlayer = _playerOne;
     }
-    Screen.setNextPlayer(_currentPlayer);
+    Screen.setCurrentPlayer(_currentPlayer);
   }
 
   function _markCell(id, game) {
