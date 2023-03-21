@@ -186,7 +186,23 @@ const Screen = (function() {
   }
 
   function unmaskBoard() {
-    const mask = document.querySelector(".mask");
+    const mask = document.querySelector(".board.mask");
+    mask.remove();
+  }
+
+  function maskScreen() {
+    const bodyElement = document.querySelector("body");
+    const mask = document.createElement("div");
+    mask.className = "mask";
+    mask.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+    mask.style.position = "absolute";
+    mask.style.height = "100%";
+    mask.style.width = "100%";
+    bodyElement.appendChild(mask);
+  }
+
+  function unmaskScreen() {
+    const mask = document.querySelector("body .mask");
     mask.remove();
   }
 
@@ -217,6 +233,8 @@ const Screen = (function() {
     markCell,
     maskBoard,
     unmaskBoard,
+    maskScreen,
+    unmaskScreen,
     setCurrentPlayer,
     buildMainMenu,
     addScore
@@ -287,6 +305,7 @@ const Game = (function() {
   function _checkWinner(game) {
     if(isWinner(_currentPlayer)) {
       const playerNum = _currentPlayer === _playerOne ? 1 : 2;
+      Screen.maskScreen();
       Board.reset();
       Screen.buildBoard(game, Board);
       Screen.addScore(playerNum);
