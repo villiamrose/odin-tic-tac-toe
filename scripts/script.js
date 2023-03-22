@@ -190,20 +190,20 @@ const Screen = (function() {
     mask.remove();
   }
 
-  function maskScreen() {
-    const bodyElement = document.querySelector("body");
+  function showWinner(name) {
+    const dialog = document.createElement("div");
     const mask = document.createElement("div");
-    mask.className = "mask";
-    mask.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-    mask.style.position = "absolute";
-    mask.style.height = "100%";
-    mask.style.width = "100%";
+    const bodyElement = document.querySelector("body");
+    dialog.textContent = `${name} wins!`;
+    dialog.className = "dialog";
+    mask.className = "cover";
+    mask.appendChild(dialog);
     bodyElement.appendChild(mask);
   }
 
-  function unmaskScreen() {
-    const mask = document.querySelector("body .mask");
-    mask.remove();
+  function hideWinner() {
+    const winner = document.querySelector(".cover");
+    winner.remove();
   }
 
   function setCurrentPlayer(player) {
@@ -222,9 +222,7 @@ const Screen = (function() {
   }
 
   function addScore(playerNum) {
-    console.log(playerNum);
     const scoreElement = document.querySelector(`.p${playerNum} .score`);
-    console.log(scoreElement);
     scoreElement.textContent = scoreElement.textContent + "I";
   }
 
@@ -233,8 +231,8 @@ const Screen = (function() {
     markCell,
     maskBoard,
     unmaskBoard,
-    maskScreen,
-    unmaskScreen,
+    showWinner,
+    hideWinner,
     setCurrentPlayer,
     buildMainMenu,
     addScore
@@ -305,16 +303,22 @@ const Game = (function() {
   function _checkWinner(game) {
     if(isWinner(_currentPlayer)) {
       const playerNum = _currentPlayer === _playerOne ? 1 : 2;
-      Screen.maskScreen();
-      Board.reset();
-      Screen.buildBoard(game, Board);
-      Screen.addScore(playerNum);
-
       _currentPlayer.addScore();
-      _playerOne.resetCells();
-      _playerTwo.resetCells();
+
+      Screen.showWinner(_currentPlayer.getName());
+      
+      setTimeout(() => {
+        Board.reset();
+        Screen.buildBoard(game, Board);
+        Screen.addScore(playerNum);
+        _playerOne.resetCells();
+        _playerTwo.resetCells();
+        Screen.hideWinner();
+        _setNextPlayer(game);
+      }, 1500);
+    } else {
+      _setNextPlayer(game);
     }
-    _setNextPlayer(game);
   }
 
   // public functions
